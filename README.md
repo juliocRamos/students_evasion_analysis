@@ -21,7 +21,7 @@ Graduate final project for Data Science, analysing student evasion in a Private 
     git status
     git add .
     git commit
-    git push origin branch_name
+    git push --set-upstream origin branch_name
   ```
   - If you made some mistake, please, amend your updates or create a new commit with the fixes.
   ```
