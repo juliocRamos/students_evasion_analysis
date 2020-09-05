@@ -27,15 +27,24 @@ evasao_filtrado$PONTUACAO_PS <- as.numeric(as.character(evasao_filtrado$PONTUACA
 evasao_filtrado <- evasao_filtrado %>%
   unite(DSC_MAT_STATUS, COD_MATERI, DSC_STATUS_MAT, sep = "_", remove = FALSE)
 
-# Antes de fazer este agrupamento precisamos decidir algumas coisas...
-# Vamos usar as pontuações ps e médias por matéria? Se sim, teremos que mudar um pouco as coisas
-# se não vamos usar a média geral e teremos que calcular por aluno antes do agrupamento
 
-# a grade corrente também teria que ter colunas baseadas em médias dos alunos
-# ou algo no sentido pois o aluno pode ter cursado matérias de grades diferentes.
+# TODOS:
+# Fazer a média geral por aluno, agregar as notas para todos os RAs repetidos
+# Substituir todos os APROVADOS e etc por 1 ou 0 (caso não informado)
+# Verificar se existem casos onde o aluno tem 2 reprovações para a mesma coluna (REPROVADO P. NOTA 2x)
 
+# Resolve os nan das colunas devidas
+# Evito as colunas que não tem valores NA
+valuesToColumnMean <- function(df) {
+  for (i in 1:ncol(df)) {
+    if (is.numeric(df[,i]) && i == 7) {
+      df[is.na(df[,i]), i] <- round(mean(df[,i], na.rm = TRUE))
+    }
+  }
+  return(df)
+}
 
-
+evasao_filtrado <- valuesToColumnMean(evasao_filtrado)
 
 # Preciso dropar algumas colunas e possívelmente adicionar novamente depois
 # para fazer o reshape
@@ -52,26 +61,16 @@ evasao_filtrado <- reshape(data=evasao_filtrado,idvar="RA",
                            direction="wide",
                            sep = "_")
 
-
-
-
-
-
-
-
-
-
-
-
-
+# Exporta o dataset final
+write.csv(evasao_filtrado, file = "test.csv")
 
 
 
 # PLAYGROUND
-country<-data.frame(c("87389","87391","73220", "87389"),
-                    c("LÒGICA","MATEMÀTICA","ALGORITMOS", "LOGICA"),
+country<-data.frame(c("87389","87389","87389", "87389"),
+                    c("LÓGICA","MATEMÁTICA","LOGICA", "LOGICA"),
                     c(10, 7, 8.7, 4), c("2018", "2018", "2018", "2018"),
-                    c("APROVADO","APROVADO","APROVADO", "REPROVADO NOTA"))
+                    c("APROVADO","APROVADO","REPROVADO NOTA", "REPROVADO NOTA"))
 
 colnames(country)<- c("RA","DISCIPLINA","NOTA", "GRADE", "STATUS_DSC")
 country_L_to_w <- reshape(data=country,idvar="RA",
