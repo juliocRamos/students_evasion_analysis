@@ -1,5 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
-current version:  0.1.0
+current version:  0.2.0
 
 Notes:
 Pre-processing: Change rows by columns - DSC_MAT and DSC_STATUS_MAT
+New pre-processing script: Transcription of Python code into R code
