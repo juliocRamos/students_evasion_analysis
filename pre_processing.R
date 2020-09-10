@@ -6,7 +6,7 @@ library(data.table)
 library(tidyr)
 
 # Leitura do dataset
-evasao_alunos <- read.csv("dados_evasao.csv", encoding = "UTF-8")
+evasao_alunos <- read.csv("datasets/dados_evasao.csv", encoding = "UTF-8")
 
 # Verifico o tipo das colunas e se existem valores
 str(evasao_alunos)
@@ -30,14 +30,14 @@ evasao_filtrado <- evasao_filtrado %>%
 
 # TODOS:
 # Fazer a média geral por aluno, agregar as notas para todos os RAs repetidos
-# Substituir todos os APROVADOS e etc por 1 ou 0 (caso não informado)
 # Verificar se existem casos onde o aluno tem 2 reprovações para a mesma coluna (REPROVADO P. NOTA 2x)
 
-# Resolve os nan das colunas devidas
-# Evito as colunas que não tem valores NA
+
+# Resolve os NANs das colunas devidas (apenas da coluna 12 por enquanto)
+# depois esta coluna é reindexada para a coluna 7
 valuesToColumnMean <- function(df) {
   for (i in 1:ncol(df)) {
-    if (is.numeric(df[,i]) && i == 7) {
+    if (is.numeric(df[,i]) && i == 12) {
       df[is.na(df[,i]), i] <- round(mean(df[,i], na.rm = TRUE))
     }
   }
@@ -61,8 +61,18 @@ evasao_filtrado <- reshape(data=evasao_filtrado,idvar="RA",
                            direction="wide",
                            sep = "_")
 
+# Substituir todos os APROVADOS ou REPROVADOS por 1
+evasao_filtrado <- sapply(evasao_filtrado, function(x) {
+  x <- gsub("^.*(APROVADO|REPROVADO).*$", 1, x)}) %>% as.data.frame()
+
+# Substitui todos os NAN por 0, o que indicando que o aluno não cursou
+# ou não teve o preenchimento do registro informado.
+evasao_filtrado[is.na(evasao_filtrado)] <- as.numeric(0)
+
+
 # Exporta o dataset final
 write.csv(evasao_filtrado, file = "test.csv")
+
 
 
 
@@ -79,6 +89,7 @@ country_L_to_w <- reshape(data=country,idvar="RA",
                           direction="wide")
 
 
+# https://stackoverflow.com/questions/29271549/replace-all-occurrences-of-a-string-in-a-data-frame#:~:text=If%20you%20are%20only%20looking,var2%201%20a%20%3C2%20%3C3
 # https://www.datasciencemadesimple.com/reshape-in-r-from-wide-to-long-from-long-to-wide/#:~:text=Reshape%20from%20wide%20to%20long,()%20and%20cast()%20function.
 
 
