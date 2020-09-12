@@ -1,4 +1,8 @@
-# Importação das libs
+# TODOS:
+# Verificar se existem casos onde o aluno tem 2 reprova??es para a 
+# mesma coluna (REPROVADO P. NOTA 2x)
+
+# Importa??o das libs
 library(dplyr)
 library(ggplot2)
 library(scales)
@@ -15,11 +19,11 @@ apply(evasao_alunos, 2, function(x) any(is.na(x)))
 # Filtra apenas a grade superior a 2015
 evasao_filtrado <- filter(evasao_alunos, GRADE_CORRENTE >= "2015")
 
-# Faço o replace de , por .
+# Fa?o o replace de , por .
 evasao_filtrado$NOTA_MEDIA <- gsub(",", '.', evasao_filtrado$NOTA_MEDIA, fixed =T)
 evasao_filtrado$PONTUACAO_PS <- gsub(",", '.', evasao_filtrado$PONTUACAO_PS, fixed =T)
 
-# Converto as notas para numérico
+# Converto as notas para num?rico
 evasao_filtrado$NOTA_MEDIA <- as.numeric(as.character(evasao_filtrado$NOTA_MEDIA))
 evasao_filtrado$PONTUACAO_PS <- as.numeric(as.character(evasao_filtrado$PONTUACAO_PS))
 
@@ -27,14 +31,8 @@ evasao_filtrado$PONTUACAO_PS <- as.numeric(as.character(evasao_filtrado$PONTUACA
 evasao_filtrado <- evasao_filtrado %>%
   unite(DSC_MAT_STATUS, COD_MATERI, DSC_STATUS_MAT, sep = "_", remove = FALSE)
 
-
-# TODOS:
-# Fazer a média geral por aluno, agregar as notas para todos os RAs repetidos
-# Verificar se existem casos onde o aluno tem 2 reprovações para a mesma coluna (REPROVADO P. NOTA 2x)
-
-
 # Resolve os NANs das colunas devidas (apenas da coluna 12 por enquanto)
-# depois esta coluna é reindexada para a coluna 7
+# depois esta coluna ? reindexada para a coluna 7
 valuesToColumnMean <- function(df) {
   for (i in 1:ncol(df)) {
     if (is.numeric(df[,i]) && i == 12) {
@@ -46,7 +44,10 @@ valuesToColumnMean <- function(df) {
 
 evasao_filtrado <- valuesToColumnMean(evasao_filtrado)
 
-# Preciso dropar algumas colunas e possívelmente adicionar novamente depois
+# Criando dataframe temporÃ¡rio (calculo da mÃ©dia) 
+tmp <- evasao_filtrado
+
+# Preciso dropar algumas colunas e poss?velmente adicionar novamente depois
 # para fazer o reshape
 columns_to_remove <- c("X", "COD_MATERI", "COD_MATERI", "DSC_MAT")
 
@@ -54,20 +55,30 @@ columns_to_remove <- c("X", "COD_MATERI", "COD_MATERI", "DSC_MAT")
 evasao_filtrado <- subset(evasao_filtrado, select = names(evasao_filtrado)
                           %ni% columns_to_remove)
 
-# Faz o reshape da base criando todas as colunas de MAT + STATUS_APROVACAO para todos os alunos
+# Faz o reshape da base criando todas as colunas de MAT + STATUS_APROVACAO para 
+# todos os alunos
 evasao_filtrado <- reshape(data=evasao_filtrado,idvar="RA",
                            v.names = "DSC_STATUS_MAT",
                            timevar = "DSC_MAT_STATUS",
                            direction="wide",
                            sep = "_")
 
+# Alterando as notas das disciplinas pela mÃ©dia geral de cada aluno 
+evasao_filtrado$NOTA_MEDIA <- na.omit(round(
+  tapply(tmp$NOTA_MEDIA, tmp$RA, mean),2)%>% as.data.frame())
+
+
 # Substituir todos os APROVADOS ou REPROVADOS por 1
 evasao_filtrado <- sapply(evasao_filtrado, function(x) {
-  x <- gsub("^.*(APROVADO|REPROVADO).*$", 1, x)}) %>% as.data.frame()
+  x <- gsub("^.*(APROVADO|REPROVADO).*$", 1, x)
+}) %>% as.data.frame(stringsAsFactors=FALSE)
 
-# Substitui todos os NAN por 0, o que indicando que o aluno não cursou
-# ou não teve o preenchimento do registro informado.
-evasao_filtrado[is.na(evasao_filtrado)] <- as.numeric(0)
+# Substitui todos os NAN por 0, o que indicando que o aluno n?o cursou
+# ou n?o teve o preenchimento do registro informado.
+evasao_filtrado[is.na(evasao_filtrado)] <- 0
+
+
+
 
 
 # Exporta o dataset final
@@ -78,7 +89,7 @@ write.csv(evasao_filtrado, file = "test.csv")
 
 # PLAYGROUND
 country<-data.frame(c("87389","87389","87389", "87389"),
-                    c("LÓGICA","MATEMÁTICA","LOGICA", "LOGICA"),
+                    c("L?GICA","MATEM?TICA","LOGICA", "LOGICA"),
                     c(10, 7, 8.7, 4), c("2018", "2018", "2018", "2018"),
                     c("APROVADO","APROVADO","REPROVADO NOTA", "REPROVADO NOTA"))
 

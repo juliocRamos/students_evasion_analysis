@@ -1,12 +1,18 @@
 ------- PRE_RELEASE VERSION CONTROL -------
-current version:  0.2.2
+current version:  0.2.3
 
 Notes:
 Pre-processing: Change rows by columns - DSC_MAT and DSC_STATUS_MAT
 
 New pre-processing script: Transcription of Python code into R code
 
-Pre-Processing: Improvements in pre-processing code to override NA values with column media
+Pre-Processing: Improvements in pre-processing code to override NA
+values with column media
 
-Pre-Processing: Converted all *APROVADO or *REPROVADO column values by 1 or 0 if NAN and dataset file
-format was converted from .xlsx to .csv
+Pre-Processing: Converted all *APROVADO or *REPROVADO column values
+by 1 or 0 if NAN and dataset file format was converted from .xlsx
+to .csv
+
+Pre-Processing: Added R script into project pre_processing (fix OS
+path imcompatibility) and implemented function to group and apply
+mean function over column NOTA_MEDIA 
