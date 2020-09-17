@@ -1,5 +1,5 @@
 ------- PRE_RELEASE VERSION CONTROL -------
-current version:  0.2.3
+current version:  0.2.4
 
 Notes:
 Pre-processing: Change rows by columns - DSC_MAT and DSC_STATUS_MAT
@@ -15,4 +15,8 @@ to .csv
 
 Pre-Processing: Added R script into project pre_processing (fix OS
 path imcompatibility) and implemented function to group and apply
-mean function over column NOTA_MEDIA 
+mean function over column NOTA_MEDIA
+
+Pre-processing: Added function to count and apply the retakes for
+the appropriated lines. Solved some encoding comment errors and
+removed code to handle incompatibility code.
