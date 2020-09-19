@@ -1,5 +1,5 @@
 ------- PRE_RELEASE VERSION CONTROL -------
-current version:  0.2.4
+current version:  0.2.5
 
 Notes:
 Pre-processing: Change rows by columns - DSC_MAT and DSC_STATUS_MAT
@@ -20,3 +20,8 @@ mean function over column NOTA_MEDIA
 Pre-processing: Added function to count and apply the retakes for
 the appropriated lines. Solved some encoding comment errors and
 removed code to handle incompatibility code.
+
+Pre-processing: Changed discipline status to representative numbers 
+and added the pivot_wider function to apply dataframe changes(create 
+temp dataframe for transpose columns COD_MATERI and DSC_STATUS_MAT 
+and merge students IDs).

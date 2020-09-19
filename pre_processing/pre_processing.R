@@ -18,6 +18,48 @@ apply(evasao_alunos, 2, function(x) any(is.na(x)))
 # Filtra apenas a grade superior a 2015
 evasao_filtrado <- filter(evasao_alunos, GRADE_CORRENTE >= "2015")
 
+tmp_1 <- evasao_filtrado
+
+# Tranformando os Status da coluna DSC_STATUS_MAT em numérico onde:
+# 0 = Não Cursou a disciplina(*)
+# 1 = APROVADO
+# 2 = REPROVADO POR NOTA
+# 3 = REPROVADO POR FREQ.
+# 4 = REPROVADO NOTA & FREQ.
+# 5 = TEVE REPROVAÇÃO(ÕES) E FOI APROVADO POSTERIORMENTE(*)
+# (*) Serão inseridos nas próximas linhas os valores
+tmp_1$DSC_STATUS_MAT[which(tmp_1$DSC_STATUS_MAT == "APROVADO")] <- as.numeric(as.character(1))
+tmp_1$DSC_STATUS_MAT[which(tmp_1$DSC_STATUS_MAT == "REPROVADO POR NOTA")] <- as.numeric(as.character(2))
+tmp_1$DSC_STATUS_MAT[which(tmp_1$DSC_STATUS_MAT == "REPROVADO POR FREQ.")] <- as.numeric(as.character(3))
+tmp_1$DSC_STATUS_MAT[which(tmp_1$DSC_STATUS_MAT == "REPROVADO NOTA & FREQ.")] <- as.numeric(as.character(4))
+
+# Faz o transpose entre duas colunas (COD_MATERI e DSC_STATUS_MAT), fazendo uma coluna de disciplina em seus
+# respectivos status para cada aluno e fazendo o merge de RAs (por aluno).
+# Obs.: values_fill = 0 ---> Valores null corresponde a alunos que não cursaram a disciplina,
+# atribuindo o valor 0 para esses casos;
+# values_fn = function(x) -----> Função criada para tratar dados duplicados (Alunos que possuem duas aprovações
+# ou que foram reprovados e aprovados na ultima ocorrencia).
+tmp_1 <- pivot_wider(tmp_1, 
+                     id_cols = RA, 
+                     names_from = COD_MATERI, 
+                     values_from = DSC_STATUS_MAT, 
+                     values_fill = 0, 
+                     values_fn = function(x){
+                        if(length(x) > 1){
+                          last_value <- tail(x, n=1)
+                          first_value <- head(x, n=1)
+                          if (first_value == "1") {
+                            return(1)
+                          } else if(last_value %in% c("2", "3", "4")) {
+                            return(as.numeric(as.character(last_value)))
+                          } else {
+                            return(5)
+                          }
+                        } else {
+                          return(as.numeric(as.character(x)))
+                        }
+                      })
+
 # Faco o replace de , por .
 evasao_filtrado$NOTA_MEDIA <- gsub(",", '.', evasao_filtrado$NOTA_MEDIA, fixed =T)
 evasao_filtrado$PONTUACAO_PS <- gsub(",", '.', evasao_filtrado$PONTUACAO_PS, fixed =T)
