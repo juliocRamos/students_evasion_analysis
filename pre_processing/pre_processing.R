@@ -72,14 +72,6 @@ evasao_filtrado <- reshape(data=evasao_filtrado,idvar="RA",
                            direction="wide",
                            sep = "_")
 
-# Altera as NOTA_MEDIA de cada disciplina por uma NOTA_MEDIA geral
-evasao_filtrado$NOTA_MEDIA <- round(tapply(
-  tmp_calc_media$NOTA_MEDIA, tmp_calc_media$RA, mean), 2)
-
-# Altera as PONTUACAO_PS para uma nota PONTUACAO_PS geral
-evasao_filtrado$PONTUACAO_PS <- round(tapply(
-  tmp_calc_media$PONTUACAO_PS, tmp_calc_media$RA, mean), 2)
-
 # Substituir todos os APROVADOS ou REPROVADOS por 1
 evasao_filtrado <- sapply(evasao_filtrado, function(x) {
   x <- gsub("^.*(APROVADO|REPROVADO).*$", 1, x)
@@ -107,6 +99,14 @@ criarColunasTotReprovacoes <- function(d1, d2) {
 
       if (nrow(d2[which(d2$RA == ra), ] != '')) {
         d2$TOT_REPROVACOES[which(d2$RA == ra)] <- reprovacoes
+        
+        # Calcula a nota media geral
+        d2$NOTA_MEDIA[which(d2$RA == ra)] <-
+          round(mean(tmp_calc_media$NOTA_MEDIA[which(tmp_calc_media$RA == ra)]), 2)
+        
+        # Calcula a pontuacao_ps geral
+        d2$PONTUACAO_PS[which(d2$RA == ra)] <-
+          round(mean(tmp_calc_media$PONTUACAO_PS[which(tmp_calc_media$RA == ra)]), 2)
       }
     }
   }
@@ -116,6 +116,11 @@ criarColunasTotReprovacoes <- function(d1, d2) {
 
 # Aplica as reprovacoes para os alunos adequados
 evasao_filtrado <- criarColunasTotReprovacoes(count_reprovacoes, evasao_filtrado)
+
+
+# Conta as reprovacoes por aluno
+calc_nota_media <- filter(evasao_alunos, GRADE_CORRENTE >= "2015") %>%
+  count(RA, NOTA_MEDIA)
 
 materias_por_aluno <- filter(evasao_alunos, GRADE_CORRENTE >= "2015")
 
@@ -173,25 +178,6 @@ evasao_filtrado <-merge(evasao_filtrado, materias_por_aluno, by = "RA")
 
 # Exporta o dataframe final.
 write.csv(evasao_filtrado, file = "pre_processed_analysis.csv")
-
-
-
-
-
-
-
-
-# PLAYGROUND
-country<-data.frame(c("87389","87389","87389", "87389"),
-                    c("LOGICA","MATEMATICA","LOGICA", "LOGICA"),
-                    c(10, 7, 8.7, 4), c("2018", "2018", "2018", "2018"),
-                    c("APROVADO","APROVADO","REPROVADO NOTA", "REPROVADO NOTA"))
-
-colnames(country)<- c("RA","DISCIPLINA","NOTA", "GRADE", "STATUS_DSC")
-country_L_to_w <- reshape(data=country,idvar="RA",
-                          v.names = "STATUS_DSC",
-                          timevar = "DISCIPLINA",
-                          direction="wide")
 
 
 

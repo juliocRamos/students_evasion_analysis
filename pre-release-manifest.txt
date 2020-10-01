@@ -1,5 +1,5 @@
 ------- PRE_RELEASE VERSION CONTROL -------
-current version:  0.2.5
+current version:  0.2.6
 
 Notes:
 Pre-processing: Change rows by columns - DSC_MAT and DSC_STATUS_MAT
@@ -25,3 +25,5 @@ Pre-processing: Changed discipline status to representative numbers
 and added the pivot_wider function to apply dataframe changes(create 
 temp dataframe for transpose columns COD_MATERI and DSC_STATUS_MAT 
 and merge students IDs).
+
+Pre-processing: Fixed column means for NOTA_MEDIA and PONTUACAO_PS.
