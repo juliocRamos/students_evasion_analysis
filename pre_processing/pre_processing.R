@@ -56,13 +56,34 @@ count_reprovacoes <- filter(evasao_filtrado, grepl("REPROVADO", DSC_STATUS_MAT))
   filter(n >= 1) %>%
   unite(merged_rows, c(RA, n), sep = ", ")
 
+# Conta as aprovacoes por aluno
+count_aprovacoes <- filter(evasao_filtrado, grepl("APROVADO", DSC_STATUS_MAT)) %>%
+  count(RA, DSC_MAT, DSC_STATUS_MAT) %>%
+  count(RA) %>%
+  filter(n >= 1) %>%
+  unite(merged_rows, c(RA, n), sep = ", ")
+
+count_tot_mat_cursadas <- filter(evasao_filtrado, 
+                                 grepl("APROVADO|REPROVADO", DSC_STATUS_MAT)) %>%
+  count(RA, DSC_MAT, DSC_STATUS_MAT) %>%
+  count(RA) %>%
+  filter(n >= 1) %>%
+  unite(merged_rows, c(RA, n), sep = ", ")
+
 # Cria a coluna TOT_REPROVACOES
 evasao_filtrado <- evasao_filtrado %>%
   mutate(TOT_REPROVACOES = 0, .after=PONTUACAO_PS)
 
+# Cria a coluna TOT_APROVACOES
+evasao_filtrado <- evasao_filtrado %>%
+  mutate(TOT_APROVACOES = 0, .after=TOT_REPROVACOES)
 
-# Processa os alunos linha a linha para substituir apenas os dos índices corretos
-criarColunasTotReprovacoes <- function(d1, d2) {
+# Cria a coluna TOT_MAT_CURSADAS
+evasao_filtrado <- evasao_filtrado %>%
+  mutate(TOT_MAT_CURSADAS = 0, .after=TOT_APROVACOES)
+
+# Processa os alunos linha a linha para preencher os campos corretos para cada RA
+preencherNovasColunas <- function(d1, d2, col_name) {
 
   for (x in d1){
     for (i in 1:nrow(d1)) {
@@ -70,17 +91,27 @@ criarColunasTotReprovacoes <- function(d1, d2) {
       reprovacoes <- as.numeric(strsplit(x, split = ",")[[i]][[2]])
 
       if (nrow(d2[which(d2$RA == ra), ] != '')) {
-        d2$TOT_REPROVACOES[which(d2$RA == ra)] <- reprovacoes
+        switch(col_name, 
+               "TOT_REPROVACOES" = {
+                 d2$TOT_REPROVACOES[which(d2$RA == ra)] <- reprovacoes 
+               }, 
+               "TOT_APROVACOES" = {
+                 d2$TOT_APROVACOES[which(d2$RA == ra)] <- reprovacoes 
+               }, 
+               "TOT_MAT_CURSADAS" = {
+                 d2$TOT_MAT_CURSADAS[which(d2$RA == ra)] <- reprovacoes
+               })
       }
-      
     }
   }
-  
+
   return(d2)
 }
 
-# Aplica as reprovacoes para os alunos adequados
-evasao_filtrado <- criarColunasTotReprovacoes(count_reprovacoes, evasao_filtrado)
+# Aplica as reprovacoes, aprovavoes e total de matérias cursadas para os alunos adequados
+evasao_filtrado <- criarNovaColuna(count_reprovacoes, evasao_filtrado, "TOT_REPROVACOES")
+evasao_filtrado <- criarNovaColuna(count_aprovacoes, evasao_filtrado, "TOT_APROVACOES")
+evasao_filtrado <- criarNovaColuna(count_tot_mat_cursadas, evasao_filtrado, "TOT_MAT_CURSADAS")
 
 # Funcao que pega a lista de RAs do dataframe e faz o calculo da media geral,
 # tanto da nota media das disciplinas como da pontuacao ps
@@ -161,10 +192,10 @@ columns_to_remove <- c("X", "COD_MATERI", "DSC_STATUS_MAT", "DSC_MAT")
 evasao_filtrado <- subset(evasao_filtrado, select = names(evasao_filtrado)
                            %ni% columns_to_remove)
 
-# Filtra os registros pela coluna RA e seleciona apenas as 8 primeiras
+# Filtra os registros pela coluna RA e seleciona apenas as 10 primeiras
 # colunas
 evasao_filtrado <- distinct(evasao_filtrado, evasao_filtrado$RA,
-                            .keep_all = TRUE) %>% select(1:8)
+                            .keep_all = TRUE) %>% select(1:10)
 
 
 # Mergeia os dataframes por RA para adicionar as colunas de disciplina
