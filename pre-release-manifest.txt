@@ -1,5 +1,5 @@
 ------- PRE_RELEASE VERSION CONTROL -------
-current version:  0.2.6
+current version:  0.2.7
 
 Notes:
 Pre-processing: Change rows by columns - DSC_MAT and DSC_STATUS_MAT
@@ -29,3 +29,5 @@ and merge students IDs).
 Pre-processing: Fixed column means for NOTA_MEDIA and PONTUACAO_PS.
 
 Pre-processing: General fixes and code refactoring.
+
+Pre-processing: Added new columns: TOT_APROVACOES and TOT_MAT_CURSADAS.
