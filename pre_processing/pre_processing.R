@@ -202,7 +202,7 @@ evasao_filtrado <- distinct(evasao_filtrado, evasao_filtrado$RA,
 evasao_filtrado <- merge(evasao_filtrado, materias_por_aluno, by = "RA")
 
 # Exporta o dataframe final.
-write.csv(evasao_filtrado, file = "pre_processed_analysis.csv")
+write.csv(evasao_filtrado, file = "pre_processed_analysis.csv", row.names = FALSE)
 
 
 
