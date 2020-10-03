@@ -1,0 +1,35 @@
+------- PRE_RELEASE VERSION CONTROL -------
+current version:  0.3.0
+
+Notes:
+Pre-processing: Change rows by columns - DSC_MAT and DSC_STATUS_MAT
+
+New pre-processing script: Transcription of Python code into R code
+
+Pre-Processing: Improvements in pre-processing code to override NA
+values with column media
+
+Pre-Processing: Converted all *APROVADO or *REPROVADO column values
+by 1 or 0 if NAN and dataset file format was converted from .xlsx
+to .csv
+
+Pre-Processing: Added R script into project pre_processing (fix OS
+path imcompatibility) and implemented function to group and apply
+mean function over column NOTA_MEDIA
+
+Pre-processing: Added function to count and apply the retakes for
+the appropriated lines. Solved some encoding comment errors and
+removed code to handle incompatibility code.
+
+Pre-processing: Changed discipline status to representative numbers 
+and added the pivot_wider function to apply dataframe changes(create 
+temp dataframe for transpose columns COD_MATERI and DSC_STATUS_MAT 
+and merge students IDs).
+
+Pre-processing: Fixed column means for NOTA_MEDIA and PONTUACAO_PS.
+
+Pre-processing: General fixes and code refactoring.
+
+Pre-processing: Added new columns: TOT_APROVACOES and TOT_MAT_CURSADAS.
+
+Pre-analysis: Created r-script dropout_student_profile.r and graph plot (RESID_ARARAS only)
