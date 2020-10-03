@@ -27,3 +27,5 @@ temp dataframe for transpose columns COD_MATERI and DSC_STATUS_MAT
 and merge students IDs).
 
 Pre-processing: Fixed column means for NOTA_MEDIA and PONTUACAO_PS.
+
+Pre-processing: General fixes and code refactoring.
