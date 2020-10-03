@@ -36,7 +36,7 @@ evasao_filtrado$EVADIDO <- colunas_convertidas$EVADIDO
 evasao_filtrado$RESID_ARARAS <- colunas_convertidas$RESID_ARARAS
 evasao_filtrado$BOLSISTA <- colunas_convertidas$BOLSISTA
 
-# Resolve os NANs das colunas devidas (apenas da coluna 12 por enquanto) AGORA É A 11
+# Resolve os NANs das colunas devidas (apenas da coluna 11 por enquanto)
 # depois esta coluna sera reindexada para a coluna 7
 valuesToColumnMean <- function(df) {
   for (i in 1:ncol(df)) {
