@@ -1,5 +1,7 @@
 ------- RELEASE VERSION CONTROL -------
-current version:  0.0.0
+current version:  1.0.0
 
 Notes:
-Write here any notes
+Release minor version with pre-processing and initial analysis
+
+Release major project updates with stable features, final dbs and classification models.

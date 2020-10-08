@@ -1,4 +1,5 @@
 .ipynb_checkpoints  
+<<<<<<< HEAD
 predictions_*/
 __pycache__
 .Rhistory 
@@ -9,3 +10,7 @@ logs/
 *.jpg
 *.h5
 *.loc
+=======
+.Rhistory 
+.Rproj.user
+>>>>>>> [pre-processing][Merge] 0.1.0 pre-release into release (#18)
