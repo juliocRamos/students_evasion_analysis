@@ -1,7 +1,8 @@
 ------- PRE_RELEASE VERSION CONTROL -------
-current version:  0.3.0
+current version:  0.3.2
 
 Notes:
+
 Pre-processing: Change rows by columns - DSC_MAT and DSC_STATUS_MAT
 
 New pre-processing script: Transcription of Python code into R code
@@ -32,4 +33,8 @@ Pre-processing: General fixes and code refactoring.
 
 Pre-processing: Added new columns: TOT_APROVACOES and TOT_MAT_CURSADAS.
 
-Pre-analysis: Created r-script dropout_student_profile.r and graph plot (RESID_ARARAS only)
+Pre-analysis: Created r-script dropout_student_profile.r and graph plot 
+(RESID_ARARAS only).
+
+Pre-analysis: Created graphs for identification profile students (with 
+BOLSISTA, RESID_ARARAS (changed for pie chart), EVADIDO and NOTA_MEDIA columns).
