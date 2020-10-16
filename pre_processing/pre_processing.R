@@ -186,7 +186,8 @@ materias_por_aluno <- pivot_wider(materias_por_aluno,
                                 })
 
 # Retirando algumas colunas desnecessárias no momento 
-columns_to_remove <- c("X", "COD_MATERI", "DSC_STATUS_MAT", "DSC_MAT")
+columns_to_remove <- c("X", "COD_MATERI", "DSC_STATUS_MAT", "DSC_MAT",
+                       "evasao_alunos.RA", "evasao_filtrado.RA")
 
 `%ni%` <- Negate(`%in%`)
 evasao_filtrado <- subset(evasao_filtrado, select = names(evasao_filtrado)
@@ -201,7 +202,7 @@ evasao_filtrado <- distinct(evasao_filtrado, evasao_filtrado$RA,
 # Mergeia os dataframes por RA para adicionar as colunas de disciplina
 evasao_filtrado <- merge(evasao_filtrado, materias_por_aluno, by = "RA")
 
-# Exporta o dataframe final.
+# Exporta o dataframe final
 write.csv(evasao_filtrado, file = "pre_processed_analysis.csv", row.names = FALSE)
 
 

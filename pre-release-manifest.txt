@@ -1,4 +1,5 @@
 ------- PRE_RELEASE VERSION CONTROL -------
+
 current version:  0.3.2
 
 Notes:
@@ -38,3 +39,8 @@ Pre-analysis: Created r-script dropout_student_profile.r and graph plot
 
 Pre-analysis: Created graphs for identification profile students (with 
 BOLSISTA, RESID_ARARAS (changed for pie chart), EVADIDO and NOTA_MEDIA columns).
+
+Pre-analysis: Created r-script dropout_student_profile.r and graph plot (RESID_ARARAS only)
+
+Pre-processing: Added code to remove column "evasao_filtrado.RA"
+
