@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.3.2
+current version:  0.3.3
 
 Notes:
 
@@ -44,3 +44,6 @@ Pre-analysis: Created r-script dropout_student_profile.r and graph plot (RESID_A
 
 Pre-processing: Added code to remove column "evasao_filtrado.RA"
 
+Pre-processing: Changed year data filter to 2014; Fixed "APROVACOES|REPROVACOES" count function.
+Abstracted count processing to independent function (reduced lines of code).
+Exported new pre-processed file with modifications.
