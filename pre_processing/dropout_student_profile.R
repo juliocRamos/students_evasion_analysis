@@ -12,7 +12,9 @@ total_alunos <- read.csv("pre_processed_analysis.csv", encoding = "UTF-8")
 # Relação de alunos evadidos de Araras e outras cidades
 alunos_evadidos_araras <- total_alunos %>%
   count(EVADIDO, RESID_ARARAS) %>%
-  count(RESID_ARARAS)
+  group_by(RESID_ARARAS) %>%
+  summarize(across(.fns = sum)) %>%
+  select(c(RESID_ARARAS, n))
 
 # Converte x para porcentagem considerando o total de alunos
 calc_percent <- function(x) {
@@ -58,7 +60,9 @@ alunos_por_grade <- total_alunos
 
 alunos_por_grade <- total_alunos %>%
   count(GRADE_CORRENTE, EVADIDO) %>%
-  count(GRADE_CORRENTE)
+  group_by(GRADE_CORRENTE) %>%
+  summarize(across(.fns = sum)) %>%
+  select(c(GRADE_CORRENTE, n))
 
 alunos_por_grade$n <- lapply(alunos_por_grade$n, calc_percent)
 

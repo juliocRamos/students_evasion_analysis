@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.3.3
+current version:  0.3.4
 
 Notes:
 
@@ -47,3 +47,5 @@ Pre-processing: Added code to remove column "evasao_filtrado.RA"
 Pre-processing: Changed year data filter to 2014; Fixed "APROVACOES|REPROVACOES" count function.
 Abstracted count processing to independent function (reduced lines of code).
 Exported new pre-processed file with modifications.
+
+Pre-analysis: Fix filter methods (deleted count() functions - incompatibility R versions).
