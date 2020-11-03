@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.3.4
+current version:  0.3.5
 
 Notes:
 
@@ -49,3 +49,6 @@ Abstracted count processing to independent function (reduced lines of code).
 Exported new pre-processed file with modifications.
 
 Pre-analysis: Fix filter methods (deleted count() functions - incompatibility R versions).
+
+Pre-analysis: Created charts for student profile analyse and table to approved and disapproved 
+means to year; standardizing plot charts.
