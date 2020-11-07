@@ -7,7 +7,7 @@ library(grid)
 library(gridExtra)
 
 #Importando CSV pre-processado
-total_alunos <- read.csv("pre_processed_analysis.csv", encoding = "UTF-8")
+total_alunos <- read.csv("datasets/pre_processed_analysis.csv", encoding = "UTF-8")
 
 ################# Functions
 
@@ -122,41 +122,69 @@ ggplot(total_alunos, aes(x=RA, y=NOTA_MEDIA, color=as.factor(EVADIDO))) +
   scale_color_manual("Situação do Aluno", labels = c("Não evadido", "Evadido"), values = c("#4169E1", "#FF6347")) +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10))
 
-################# Top 20 matérias mais cursadas (gráfico de barras).
-################# PERGUNTAR PARA O NEGRETTO
+################# Top 10 matérias mais cursadas (gráfico de barras).
 
-#Recebendo os codigos das disciplinas
-cod_disciplina <- colnames(total_alunos[11:ncol(total_alunos)])
-
-#Vetor para armazenar numero de cursantes de cada disciplina
-num_alunos <- c()
-#Contabilizando numero de cursantes para cada disciplina
-for (i in 11:ncol(total_alunos)){
-  t <- count(total_alunos, total_alunos[,i])
-  num_alunos <- append(num_alunos, sum(t[2:nrow(t),"n"]))
+# Converte x para porcentagem considerando o total de alunos
+calc_percent_top10 <- function(df) {
+  for(i in 1:nrow(df)){
+    df[i,2] <- round((df[i,2] / df[i,4] * 100), 0)
+  }
+  
+  return(df)
 }
 
-#Criando Data frame e tratando os NA values (inserindo o valor 0)
-top10Disc <- data.frame(cod_disciplina, num_alunos)
-top10Disc[is.na(top10Disc)] <- 0
+top10Disci_APR <- select(total_alunos, matches("SIF|NCS")) %>%
+  pivot_longer(cols = matches("SIF|NCS")) %>%
+  count(name, value) %>%
+  filter(value == 1) %>%
+  group_by(name) %>%
+  rename("tipo_reprov_disc" = value, "tot_alunos_disc" = n) %>%
+  summarise(total_alunos_disc = as.double(sum(tot_alunos_disc))) %>%
+  arrange(-total_alunos_disc) %>%
+  head(10) %>%
+  mutate(label = "A")
 
-#Organizando em ordem decrescente os numeros de cursantes
-top10Disc <- top10Disc[order(top10Disc$num_alunos, decreasing = TRUE), ]
+totDisciRepApro <- select(total_alunos, matches("SIF|NCS")) %>%
+  pivot_longer(cols = matches("SIF|NCS")) %>%
+  count(name, value) %>%
+  filter(value > 1) %>%
+  rename("tipo_reprov_disc" = value, "tot_alunos_disc" = n)
 
+totDisciRepApro <- totDisciRepApro[order(
+  totDisciRepApro$tot_alunos_disc, decreasing = TRUE),]
 
-ggplot(top10Disc[1:10, ], aes(x = reorder(cod_disciplina, -num_alunos) , 
-                              y = num_alunos, fill = reorder(cod_disciplina, -num_alunos))) +
-  geom_bar(stat="identity", width = 1, color = "white")+
-  ylab("Nº de Alunos") +
+top10Disci_REP <- filter(totDisciRepApro, tipo_reprov_disc != 1 & name %in% top10Disci$name) %>%
+  select(name, tot_alunos_disc) %>%
+  group_by(name) %>%
+  summarise(total_alunos_disc = as.double(sum(tot_alunos_disc))) %>%
+  head(10) %>%
+  arrange(name) %>%
+  mutate(label = "R")
+
+top10Disc <- rbind(top10Disci_REP, top10Disci_APR) 
+
+top10Disc <- within(top10Disc, total_alunos <- ave(total_alunos_disc, name, FUN = sum))
+
+top10Disc <- calc_percent_top10(top10Disc)
+
+ggplot(top10Disc, aes(x = reorder(name, -total_alunos_disc) , 
+                      y = total_alunos_disc, fill = label)) +
+  geom_bar(stat="identity", width = 1, color = "black", position = "dodge2") +
+  labs(title = "Perfil do Aluno", subtitle = "Top 10 matérias mais cursadas (%)",
+       caption = "Data source: FHO Uniararas - Sistemas de Informação (2014 à 2019)") +
+  ylab("% de Alunos") +
   xlab("Disciplinas") +
-  labs(title = "As 20 disciplinas mais cursadas de SI (2014-2019)") +
-  geom_text(aes(label=num_alunos), vjust=-0.7, color="white",
-            position = position_stack(vjust = 0.4), size=5)+
-  scale_color_manual() +
-  scale_fill_discrete(name = "Código da\nDisciplina ") +
-theme_update()
+  geom_text(aes(label=total_alunos_disc), hjust = "center", color="black", 
+            position=position_dodge(width=1),vjust=-0.4, size=3)+
+  theme_update() +
+  theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5),
+        axis.title=element_text(size=9), axis.text=element_text(size=7)) +
+  scale_fill_manual("Situação\ndo Aluno", labels = c("Aprovado", "Reprovado"), values = c("#4169E1", "#FF6347"))
+
+
 
 ################# Média de reprovações e aprovações (evadidos vs. não evadidos) (gráficos ou tabela separados)
+
 totAproReproAlunos <- total_alunos %>%
   count(GRADE_CORRENTE,EVADIDO, TOT_APROVACOES, TOT_REPROVACOES)
 
@@ -219,5 +247,3 @@ footnote <- textGrob("Média de aprovações x Média de reprovações",
                      vjust=-13, hjust=0,gp=gpar( fontface="italic"))
 gt <- gTree(children=gList(table, title, footnote))
 grid.draw(gt)
-
-
