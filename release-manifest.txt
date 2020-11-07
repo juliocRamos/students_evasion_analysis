@@ -4,4 +4,4 @@ current version:  1.0.0
 Notes:
 Release minor version with pre-processing and initial analysis
 
-Release major project updates with stable features, final dbs and classification models.
+Release major project updates from pre-release with stable features, final dbs and classification models.
