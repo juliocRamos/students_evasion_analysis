@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.3.5
+current version:  0.3.6
 
 Notes:
 
@@ -52,3 +52,6 @@ Pre-analysis: Fix filter methods (deleted count() functions - incompatibility R 
 
 Pre-analysis: Created charts for student profile analyse and table to approved and disapproved 
 means to year; standardizing plot charts.
+
+Pre analysis: Fix chart "Top 10 Disciplinas mais cursadas (Aprovado x Reprovado)" and moved files
+in correct folders.

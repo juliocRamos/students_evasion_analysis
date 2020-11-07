@@ -194,11 +194,4 @@ evasao_filtrado <- distinct(evasao_filtrado, evasao_filtrado$RA,
 evasao_filtrado <- merge(evasao_filtrado, materias_por_aluno, by = "RA")
 
 # Exporta o dataframe final
-write.csv(evasao_filtrado, file = "pre_processed_analysis.csv", row.names = FALSE)
-
-
-
-# https://stackoverflow.com/questions/29271549/replace-all-occurrences-of-a-string-in-a-data-frame#:~:text=If%20you%20are%20only%20looking,var2%201%20a%20%3C2%20%3C3
-# https://www.datasciencemadesimple.com/reshape-in-r-from-wide-to-long-from-long-to-wide/#:~:text=Reshape%20from%20wide%20to%20long,()%20and%20cast()%20function.
-
-
+write.csv(evasao_filtrado, file = "datasets/pre_processed_analysis.csv", row.names = FALSE)
