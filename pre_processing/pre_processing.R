@@ -12,8 +12,8 @@ evasao_alunos <- read.csv("datasets/dados_evasao.csv", encoding = "UTF-8")
 str(evasao_alunos)
 apply(evasao_alunos, 2, function(x) any(is.na(x)))
 
-# Filtra apenas a grade superior a 2015
-evasao_filtrado <- filter(evasao_alunos, GRADE_CORRENTE >= "2015")
+# Filtra apenas a grade superior a 2014
+evasao_filtrado <- filter(evasao_alunos, GRADE_CORRENTE >= "2014" & GRADE_CORRENTE < 2020)
 
 # Faco o replace de , por .
 evasao_filtrado$NOTA_MEDIA <- gsub(",", '.', evasao_filtrado$NOTA_MEDIA, fixed =T)
@@ -49,26 +49,18 @@ valuesToColumnMean <- function(df) {
 
 evasao_filtrado <- valuesToColumnMean(evasao_filtrado)
 
-# Conta as reprovacoes por aluno
-count_reprovacoes <- filter(evasao_filtrado, grepl("REPROVADO", DSC_STATUS_MAT)) %>%
-  count(RA, DSC_MAT, DSC_STATUS_MAT) %>%
-  count(RA) %>%
-  filter(n >= 1) %>%
-  unite(merged_rows, c(RA, n), sep = ", ")
+# Filtra e faz a soma de Aprovacoes, Reprovacoes ou ambos a partir do status_mat
+countStatusMatPorAluno <- function(status_mat) {
+  return(filter(evasao_filtrado, grepl(status_mat, DSC_STATUS_MAT)) %>%
+    #count(RA, DSC_MAT, DSC_STATUS_MAT) %>%
+    count(RA) %>%
+    filter(n >= 1) %>%
+    unite(merged_rows, c(RA, n), sep = ", "))
+}
 
-# Conta as aprovacoes por aluno
-count_aprovacoes <- filter(evasao_filtrado, grepl("APROVADO", DSC_STATUS_MAT)) %>%
-  count(RA, DSC_MAT, DSC_STATUS_MAT) %>%
-  count(RA) %>%
-  filter(n >= 1) %>%
-  unite(merged_rows, c(RA, n), sep = ", ")
-
-count_tot_mat_cursadas <- filter(evasao_filtrado, 
-                                 grepl("APROVADO|REPROVADO", DSC_STATUS_MAT)) %>%
-  count(RA, DSC_MAT, DSC_STATUS_MAT) %>%
-  count(RA) %>%
-  filter(n >= 1) %>%
-  unite(merged_rows, c(RA, n), sep = ", ")
+count_reprovacoes <- countStatusMatPorAluno("REPROVADO")
+count_aprovacoes <- countStatusMatPorAluno("APROVADO")
+count_tot_mat_cursadas <- countStatusMatPorAluno("APROVADO|REPROVADO")
 
 # Cria a coluna TOT_REPROVACOES
 evasao_filtrado <- evasao_filtrado %>%
@@ -109,13 +101,13 @@ preencherNovasColunas <- function(d1, d2, col_name) {
 }
 
 # Aplica as reprovacoes, aprovavoes e total de matérias cursadas para os alunos adequados
-evasao_filtrado <- criarNovaColuna(count_reprovacoes, evasao_filtrado, "TOT_REPROVACOES")
-evasao_filtrado <- criarNovaColuna(count_aprovacoes, evasao_filtrado, "TOT_APROVACOES")
-evasao_filtrado <- criarNovaColuna(count_tot_mat_cursadas, evasao_filtrado, "TOT_MAT_CURSADAS")
+evasao_filtrado <- preencherNovasColunas(count_reprovacoes, evasao_filtrado, "TOT_REPROVACOES")
+evasao_filtrado <- preencherNovasColunas(count_aprovacoes, evasao_filtrado, "TOT_APROVACOES")
+evasao_filtrado <- preencherNovasColunas(count_tot_mat_cursadas, evasao_filtrado, "TOT_MAT_CURSADAS")
 
 # Funcao que pega a lista de RAs do dataframe e faz o calculo da media geral,
 # tanto da nota media das disciplinas como da pontuacao ps
-calc_media_geral <- function(data_temp, ra_list){
+calcMediaGeral <- function(data_temp, ra_list){
   
   for (i in 1:length(ra_list)) {
     
@@ -134,9 +126,8 @@ calc_media_geral <- function(data_temp, ra_list){
   return (data_temp)
 }
 
-evasao_filtrado <- calc_media_geral(evasao_filtrado, unique(evasao_filtrado$RA))
+evasao_filtrado <- calcMediaGeral(evasao_filtrado, unique(evasao_filtrado$RA))
 
-# materias_por_aluno <- filter(evasao_alunos, GRADE_CORRENTE >= "2015")
 materias_por_aluno <- evasao_filtrado
 
 # Tranformando os Status da coluna DSC_STATUS_MAT em numérico onde:
@@ -186,7 +177,8 @@ materias_por_aluno <- pivot_wider(materias_por_aluno,
                                 })
 
 # Retirando algumas colunas desnecessárias no momento 
-columns_to_remove <- c("X", "COD_MATERI", "DSC_STATUS_MAT", "DSC_MAT")
+columns_to_remove <- c("X", "COD_MATERI", "DSC_STATUS_MAT", "DSC_MAT",
+                       "evasao_alunos.RA", "evasao_filtrado.RA")
 
 `%ni%` <- Negate(`%in%`)
 evasao_filtrado <- subset(evasao_filtrado, select = names(evasao_filtrado)
@@ -201,12 +193,5 @@ evasao_filtrado <- distinct(evasao_filtrado, evasao_filtrado$RA,
 # Mergeia os dataframes por RA para adicionar as colunas de disciplina
 evasao_filtrado <- merge(evasao_filtrado, materias_por_aluno, by = "RA")
 
-# Exporta o dataframe final.
-write.csv(evasao_filtrado, file = "pre_processed_analysis.csv", row.names = FALSE)
-
-
-
-# https://stackoverflow.com/questions/29271549/replace-all-occurrences-of-a-string-in-a-data-frame#:~:text=If%20you%20are%20only%20looking,var2%201%20a%20%3C2%20%3C3
-# https://www.datasciencemadesimple.com/reshape-in-r-from-wide-to-long-from-long-to-wide/#:~:text=Reshape%20from%20wide%20to%20long,()%20and%20cast()%20function.
-
-
+# Exporta o dataframe final
+write.csv(evasao_filtrado, file = "datasets/pre_processed_analysis.csv", row.names = FALSE)

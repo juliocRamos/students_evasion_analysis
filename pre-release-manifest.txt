@@ -1,7 +1,9 @@
 ------- PRE_RELEASE VERSION CONTROL -------
-current version:  0.3.0
+
+current version:  0.3.6
 
 Notes:
+
 Pre-processing: Change rows by columns - DSC_MAT and DSC_STATUS_MAT
 
 New pre-processing script: Transcription of Python code into R code
@@ -32,4 +34,24 @@ Pre-processing: General fixes and code refactoring.
 
 Pre-processing: Added new columns: TOT_APROVACOES and TOT_MAT_CURSADAS.
 
+Pre-analysis: Created r-script dropout_student_profile.r and graph plot 
+(RESID_ARARAS only).
+
+Pre-analysis: Created graphs for identification profile students (with 
+BOLSISTA, RESID_ARARAS (changed for pie chart), EVADIDO and NOTA_MEDIA columns).
+
 Pre-analysis: Created r-script dropout_student_profile.r and graph plot (RESID_ARARAS only)
+
+Pre-processing: Added code to remove column "evasao_filtrado.RA"
+
+Pre-processing: Changed year data filter to 2014; Fixed "APROVACOES|REPROVACOES" count function.
+Abstracted count processing to independent function (reduced lines of code).
+Exported new pre-processed file with modifications.
+
+Pre-analysis: Fix filter methods (deleted count() functions - incompatibility R versions).
+
+Pre-analysis: Created charts for student profile analyse and table to approved and disapproved 
+means to year; standardizing plot charts.
+
+Pre analysis: Fix chart "Top 10 Disciplinas mais cursadas (Aprovado x Reprovado)" and moved files
+in correct folders.
