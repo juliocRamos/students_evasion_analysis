@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.3.6
+current version:  0.3.7
 
 Notes:
 
@@ -55,3 +55,6 @@ means to year; standardizing plot charts.
 
 Pre analysis: Fix chart "Top 10 Disciplinas mais cursadas (Aprovado x Reprovado)" and moved files
 in correct folders.
+
+Pre-processing: Created new columns TOT_REPROV_FREQ, TOT_REPROV_NOTA and TOT_REPROV_NOTA_FREQ.
+Generated .arff database version.

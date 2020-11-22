@@ -13,7 +13,7 @@ str(evasao_alunos)
 apply(evasao_alunos, 2, function(x) any(is.na(x)))
 
 # Filtra apenas a grade superior a 2014
-evasao_filtrado <- filter(evasao_alunos, GRADE_CORRENTE >= "2014" & GRADE_CORRENTE < 2020)
+evasao_filtrado <- filter(evasao_alunos, GRADE_CORRENTE >= 2014 & GRADE_CORRENTE < 2020)
 
 # Faco o replace de , por .
 evasao_filtrado$NOTA_MEDIA <- gsub(",", '.', evasao_filtrado$NOTA_MEDIA, fixed =T)
@@ -61,18 +61,33 @@ countStatusMatPorAluno <- function(status_mat) {
 count_reprovacoes <- countStatusMatPorAluno("REPROVADO")
 count_aprovacoes <- countStatusMatPorAluno("APROVADO")
 count_tot_mat_cursadas <- countStatusMatPorAluno("APROVADO|REPROVADO")
-
-# Cria a coluna TOT_REPROVACOES
-evasao_filtrado <- evasao_filtrado %>%
-  mutate(TOT_REPROVACOES = 0, .after=PONTUACAO_PS)
-
-# Cria a coluna TOT_APROVACOES
-evasao_filtrado <- evasao_filtrado %>%
-  mutate(TOT_APROVACOES = 0, .after=TOT_REPROVACOES)
+count_reprovacoes_nota <- countStatusMatPorAluno("REPROVADO POR NOTA")
+count_reprovacoes_freq <- countStatusMatPorAluno("REPROVADO POR FREQ.")
+count_reprovacoes_nota_freq <- countStatusMatPorAluno("REPROVADO NOTA & FREQ.")
 
 # Cria a coluna TOT_MAT_CURSADAS
 evasao_filtrado <- evasao_filtrado %>%
-  mutate(TOT_MAT_CURSADAS = 0, .after=TOT_APROVACOES)
+  mutate(TOT_MAT_CURSADAS = 0, .after=PONTUACAO_PS)
+
+# Cria a coluna TOT_APROVACOES
+evasao_filtrado <- evasao_filtrado %>%
+  mutate(TOT_APROVACOES = 0, .after=TOT_MAT_CURSADAS)
+
+# Cria a coluna TOT_REPROVACOES
+evasao_filtrado <- evasao_filtrado %>%
+  mutate(TOT_REPROVACOES = 0, .after=TOT_APROVACOES)
+
+# Cria as colunas TOT_REPROV_FREQ
+evasao_filtrado <- evasao_filtrado %>%
+  mutate(TOT_REPROV_FREQ = 0, .after=TOT_REPROVACOES)
+
+# Cria as colunas TOT_REPROV_NOT
+evasao_filtrado <- evasao_filtrado %>%
+  mutate(TOT_REPROV_NOTA = 0, .after=TOT_REPROV_FREQ)
+
+# Cria as colunas TOT_REPROV_NOTA_FREQ
+evasao_filtrado <- evasao_filtrado %>%
+  mutate(TOT_REPROV_NOTA_FREQ = 0, .after=TOT_REPROV_NOTA)
 
 # Processa os alunos linha a linha para preencher os campos corretos para cada RA
 preencherNovasColunas <- function(d1, d2, col_name) {
@@ -92,6 +107,15 @@ preencherNovasColunas <- function(d1, d2, col_name) {
                }, 
                "TOT_MAT_CURSADAS" = {
                  d2$TOT_MAT_CURSADAS[which(d2$RA == ra)] <- reprovacoes
+               },
+               "TOT_REPROV_FREQ" = {
+                 d2$TOT_REPROV_FREQ[which(d2$RA == ra)] <- reprovacoes
+               },
+               "TOT_REPROV_NOTA" = {
+                 d2$TOT_REPROV_NOTA[which(d2$RA == ra)] <- reprovacoes
+               },
+               "TOT_REPROV_NOTA_FREQ" = {
+                 d2$TOT_REPROV_NOTA_FREQ[which(d2$RA == ra)] <- reprovacoes
                })
       }
     }
@@ -104,20 +128,23 @@ preencherNovasColunas <- function(d1, d2, col_name) {
 evasao_filtrado <- preencherNovasColunas(count_reprovacoes, evasao_filtrado, "TOT_REPROVACOES")
 evasao_filtrado <- preencherNovasColunas(count_aprovacoes, evasao_filtrado, "TOT_APROVACOES")
 evasao_filtrado <- preencherNovasColunas(count_tot_mat_cursadas, evasao_filtrado, "TOT_MAT_CURSADAS")
+evasao_filtrado <- preencherNovasColunas(count_reprovacoes_nota, evasao_filtrado, "TOT_REPROV_FREQ")
+evasao_filtrado <- preencherNovasColunas(count_reprovacoes_freq, evasao_filtrado, "TOT_REPROV_NOTA")
+evasao_filtrado <- preencherNovasColunas(count_reprovacoes_nota_freq, evasao_filtrado, "TOT_REPROV_NOTA_FREQ")
 
 # Funcao que pega a lista de RAs do dataframe e faz o calculo da media geral,
 # tanto da nota media das disciplinas como da pontuacao ps
 calcMediaGeral <- function(data_temp, ra_list){
-  
+
   for (i in 1:length(ra_list)) {
-    
+
     ra <- ra_list[i]
-    
+
     if (nrow(data_temp[which(data_temp$RA == ra), ] != '')) {
       # Calcula a nota media geral
       data_temp$NOTA_MEDIA[which(data_temp$RA == ra)] <-
          round(mean(data_temp$NOTA_MEDIA[which(data_temp$RA == ra)]), 1)
-       
+
       # # Calcula a pontuacao_ps geral
       data_temp$PONTUACAO_PS[which(data_temp$RA == ra)] <-
          round(mean(data_temp$PONTUACAO_PS[which(data_temp$RA == ra)]), 1)
@@ -187,7 +214,7 @@ evasao_filtrado <- subset(evasao_filtrado, select = names(evasao_filtrado)
 # Filtra os registros pela coluna RA e seleciona apenas as 10 primeiras
 # colunas
 evasao_filtrado <- distinct(evasao_filtrado, evasao_filtrado$RA,
-                            .keep_all = TRUE) %>% select(1:10)
+                            .keep_all = TRUE) %>% select(1:13)
 
 
 # Mergeia os dataframes por RA para adicionar as colunas de disciplina
