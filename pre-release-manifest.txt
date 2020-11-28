@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.3.7
+current version:  0.3.8
 
 Notes:
 
@@ -58,3 +58,5 @@ in correct folders.
 
 Pre-processing: Created new columns TOT_REPROV_FREQ, TOT_REPROV_NOTA and TOT_REPROV_NOTA_FREQ.
 Generated .arff database version.
+
+Pre-processing: Implemented feature selection testing parts and removed low variation columns
