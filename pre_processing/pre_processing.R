@@ -1,9 +1,15 @@
 # Importacao das libs
+# install.packages("olsrr")
+# BORUTA
+# install.packages("Boruta")
+library(Boruta)
 library(dplyr)
 library(ggplot2)
 library(scales)
 library(data.table)
+library(olsrr)
 library(tidyr)
+library(caret)
 
 # Leitura do dataset
 evasao_alunos <- read.csv("datasets/dados_evasao.csv", encoding = "UTF-8")
@@ -15,11 +21,11 @@ apply(evasao_alunos, 2, function(x) any(is.na(x)))
 # Filtra apenas a grade superior a 2014
 evasao_filtrado <- filter(evasao_alunos, GRADE_CORRENTE >= 2014 & GRADE_CORRENTE < 2020)
 
-# Faco o replace de , por .
+# Faz o replace de , por .
 evasao_filtrado$NOTA_MEDIA <- gsub(",", '.', evasao_filtrado$NOTA_MEDIA, fixed =T)
 evasao_filtrado$PONTUACAO_PS <- gsub(",", '.', evasao_filtrado$PONTUACAO_PS, fixed =T)
 
-# Converto as notas para numerico
+# Converte as notas para numerico
 evasao_filtrado$NOTA_MEDIA <- as.numeric(as.character(evasao_filtrado$NOTA_MEDIA))
 evasao_filtrado$PONTUACAO_PS <- as.numeric(as.character(evasao_filtrado$PONTUACAO_PS))
 
@@ -32,9 +38,11 @@ colunas_convertidas <- lapply(colunas_convertidas, function(x){
   gsub("N", 0, x)
 })
 
-evasao_filtrado$EVADIDO <- colunas_convertidas$EVADIDO
-evasao_filtrado$RESID_ARARAS <- colunas_convertidas$RESID_ARARAS
-evasao_filtrado$BOLSISTA <- colunas_convertidas$BOLSISTA
+# Converte EVADIDO, RESID_ARARAS, BOLSISTA para numérico
+evasao_filtrado$EVADIDO <- as.numeric(colunas_convertidas$EVADIDO)
+evasao_filtrado$RESID_ARARAS <- as.numeric(colunas_convertidas$RESID_ARARAS)
+evasao_filtrado$BOLSISTA <- as.numeric(colunas_convertidas$BOLSISTA)
+evasao_filtrado$GRADE_CORRENTE <- as.numeric(colunas_convertidas$GRADE_CORRENTE)
 
 # Resolve os NANs das colunas devidas (apenas da coluna 11 por enquanto)
 # depois esta coluna sera reindexada para a coluna 7
@@ -220,5 +228,53 @@ evasao_filtrado <- distinct(evasao_filtrado, evasao_filtrado$RA,
 # Mergeia os dataframes por RA para adicionar as colunas de disciplina
 evasao_filtrado <- merge(evasao_filtrado, materias_por_aluno, by = "RA")
 
+
+# FEATURE SELECION
+# Retorna os indices das colunas com baixa variância
+lowVariationCols <- nearZeroVar(evasao_filtrado)
+lowVariationColNames <- nearZeroVar(evasao_filtrado, names = TRUE)
+print(paste("Fração de colunas nearZeroVar:", round(length(lowVariationCols)/length(evasao_filtrado),4)))
+
+# Remove as colunas com baixa variação do dataframe final
+evasao_filtrado <- evasao_filtrado[, -lowVariationCols]
+
+# Filtro a coluna de RA pois ela gera um erro durante o feature selection
+# (só aceita atributos numéricos)
+evasao_filtrado_sem_ra <- evasao_filtrado %>% select(2:63)
+forward_step_filtered <- evasao_filtrado_sem_ra
+backward_step_filtered <- evasao_filtrado_sem_ra
+boruta_filtered <- evasao_filtrado_sem_ra
+
+boruta_output <- Boruta(EVADIDO~., evasao_filtrado, doTrace=2)
+TentativeRoughFix(boruta_output)
+#boruta_signif <- names(boruta_output$finalDecision[boruta_output$finalDecision %in% c("Confirmed", "Tentative")])
+
+attStats(boruta_output)
+plot(boruta_output, cex.axis=.7, las=3, xlab="", main="Variable Importance")
+
+# Filtrar colunas do BORUTA
+boruta_filtered <- 
+  select(backward_step_filtered, boruta_signif)
+
+# Forward regression using AIC
+model <- lm(EVADIDO~., data = forward_step_filtered)
+FWDfit.aic <- ols_step_forward_aic(model, prem =.05, details = TRUE)
+
+# Filtra o dataframe com base nas colunas retornadas pelo Feature Selection
+forward_step_filtered <-select(forward_step_filtered, FWDfit.aic$predictors)
+
+
+# Backward regression using p-values
+model <- lm(EVADIDO~., data = backward_step_filtered)
+BWDfit.p <- ols_step_backward_p(model, prem =.04, details = TRUE)
+
+# Filtra o dataframe com base nas colunas retornadas pelo Feature Selection
+backward_step_filtered <- 
+  select(backward_step_filtered, !BWDfit.p$removed)
+
+
 # Exporta o dataframe final
-write.csv(evasao_filtrado, file = "datasets/pre_processed_analysis.csv", row.names = FALSE)
+write.csv(evasao_filtrado, file = "datasets/no_filtered_analysis.csv", row.names = FALSE)
+write.csv(boruta_filtered, file = "datasets/boruta_filtered.csv", row.names = FALSE)
+write.csv(forward_step_filtered, file = "datasets/forward_filtered_analysis.csv", row.names = FALSE)
+write.csv(backward_step_filtered, file = "datasets/backward_filtered_analysis.csv", row.names = FALSE)
