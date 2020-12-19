@@ -1,5 +1,8 @@
 # Importacao das libs
-install.packages("olsrr")
+# install.packages("olsrr")
+# BORUTA
+# install.packages("Boruta")
+library(Boruta)
 library(dplyr)
 library(ggplot2)
 library(scales)
@@ -241,10 +244,6 @@ evasao_filtrado_sem_ra <- evasao_filtrado %>% select(2:63)
 forward_step_filtered <- evasao_filtrado_sem_ra
 backward_step_filtered <- evasao_filtrado_sem_ra
 boruta_filtered <- evasao_filtrado_sem_ra
-
-# BORUTA
-install.packages("Boruta")
-library(Boruta)
 
 boruta_output <- Boruta(EVADIDO~., evasao_filtrado, doTrace=2)
 TentativeRoughFix(boruta_output)
