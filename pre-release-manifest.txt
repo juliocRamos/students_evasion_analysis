@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.3.8
+current version:  0.4.0
 
 Notes:
 
@@ -60,3 +60,8 @@ Pre-processing: Created new columns TOT_REPROV_FREQ, TOT_REPROV_NOTA and TOT_REP
 Generated .arff database version.
 
 Pre-processing: Implemented feature selection testing parts and removed low variation columns
+
+Pre-processing: Fixed bug where the forward_stepwise filter was removing the EVADIDO column from final
+exported file.
+
+Training-models: Implemented test Neural Network with keras

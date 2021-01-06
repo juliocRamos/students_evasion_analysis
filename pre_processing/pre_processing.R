@@ -261,8 +261,9 @@ model <- lm(EVADIDO~., data = forward_step_filtered)
 FWDfit.aic <- ols_step_forward_aic(model, prem =.05, details = TRUE)
 
 # Filtra o dataframe com base nas colunas retornadas pelo Feature Selection
-forward_step_filtered <-select(forward_step_filtered, FWDfit.aic$predictors)
-
+forward_step_filtered <-select(forward_step_filtered,
+                               forward_step_filtered$EVADIDO,
+                               FWDfit.aic$predictors)
 
 # Backward regression using p-values
 model <- lm(EVADIDO~., data = backward_step_filtered)
