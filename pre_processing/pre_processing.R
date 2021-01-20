@@ -245,16 +245,14 @@ forward_step_filtered <- evasao_filtrado_sem_ra
 backward_step_filtered <- evasao_filtrado_sem_ra
 boruta_filtered <- evasao_filtrado_sem_ra
 
-boruta_output <- Boruta(EVADIDO~., evasao_filtrado, doTrace=2)
-TentativeRoughFix(boruta_output)
-#boruta_signif <- names(boruta_output$finalDecision[boruta_output$finalDecision %in% c("Confirmed", "Tentative")])
+boruta_output <- Boruta(EVADIDO~., boruta_filtered, doTrace=2, maxRuns = 150)
+boruta_output <- TentativeRoughFix(boruta_output)
+boruta_signif <- names(boruta_output$finalDecision[
+  boruta_output$finalDecision %in% c("Confirmed", "Tentative")])
 
-attStats(boruta_output)
+print(attStats(boruta_output))
 plot(boruta_output, cex.axis=.7, las=3, xlab="", main="Variable Importance")
-
-# Filtrar colunas do BORUTA
-boruta_filtered <- 
-  select(backward_step_filtered, boruta_signif)
+boruta_filtered <- select(boruta_filtered, boruta_signif) # Filtrar colunas do BORUTA
 
 # Forward regression using AIC
 model <- lm(EVADIDO~., data = forward_step_filtered)
