@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.3.8
+current version:  0.3.9
 
 Notes:
 
@@ -60,3 +60,5 @@ Pre-processing: Created new columns TOT_REPROV_FREQ, TOT_REPROV_NOTA and TOT_REP
 Generated .arff database version.
 
 Pre-processing: Implemented feature selection testing parts and removed low variation columns
+
+Pre-processing: Fixed Boruta bugs for generating filtered final dataset
