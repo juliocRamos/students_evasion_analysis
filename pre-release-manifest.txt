@@ -62,3 +62,5 @@ Generated .arff database version.
 Pre-processing: Implemented feature selection testing parts and removed low variation columns
 
 Pre-processing: Fixed Boruta bugs for generating filtered final dataset
+
+Classification: Implemented KNN with scikit learn
