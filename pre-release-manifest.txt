@@ -66,4 +66,7 @@ exported file.
 
 Pre-processing: Fixed Boruta bugs for generating filtered final dataset
 
+Classification: Implemented KNN with scikit learn
+
 Training-models: Implemented test Neural Network with keras
+
