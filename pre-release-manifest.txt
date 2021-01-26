@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.4.0
+current version:  0.4.3
 
 Notes:
 
@@ -70,3 +70,8 @@ Classification: Implemented KNN with scikit learn
 
 Training-models: Implemented test Neural Network with keras
 
+Training-models: Adapted Neural Network to run with TensorFlow.Keras
+
+Pre-processing: Added label encodding for GRADE_CORRENTE
+
+General: Removed unusefull files and datasets and improved .gitignore

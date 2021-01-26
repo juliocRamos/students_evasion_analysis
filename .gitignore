@@ -3,3 +3,7 @@
 .Rproj.user
 **/.RData
 logs/
+*.png
+*.jpg
+*.h5
+*.loc
