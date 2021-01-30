@@ -2,6 +2,8 @@
 # install.packages("olsrr")
 # BORUTA
 # install.packages("Boruta")
+# LabelEncoder
+# install.packages(superml)
 library(Boruta)
 library(dplyr)
 library(ggplot2)
@@ -10,6 +12,7 @@ library(data.table)
 library(olsrr)
 library(tidyr)
 library(caret)
+library(superml)
 
 # Leitura do dataset
 evasao_alunos <- read.csv("datasets/dados_evasao.csv", encoding = "UTF-8")
@@ -20,6 +23,12 @@ apply(evasao_alunos, 2, function(x) any(is.na(x)))
 
 # Filtra apenas a grade superior a 2014
 evasao_filtrado <- filter(evasao_alunos, GRADE_CORRENTE >= 2014 & GRADE_CORRENTE < 2020)
+evasao_filtrado$GRADE_CORRENTE <- as.character(evasao_filtrado$GRADE_CORRENTE)
+
+# Faz Label Encodding for GRADE_CORRENTE
+lbl <- LabelEncoder$new()
+lbl$fit_transform(evasao_filtrado$GRADE_CORRENTE)
+evasao_filtrado$GRADE_CORRENTE <- lbl$fit_transform(evasao_filtrado$GRADE_CORRENTE)
 
 # Faz o replace de , por .
 evasao_filtrado$NOTA_MEDIA <- gsub(",", '.', evasao_filtrado$NOTA_MEDIA, fixed =T)
@@ -190,6 +199,7 @@ materias_por_aluno$DSC_STATUS_MAT[
 # values_fill = 0 (atribui-se 0 para alunos que não fizeram a matéria)
 # values_fn = function(x) (Tratar dados duplicados (Alunos que possuem duas
 # aprovações ou que foram reprovados e aprovados na ultima ocorrencia).
+# Adaptamos um LabelEncodding aqui para ter mais controle do processo.
 materias_por_aluno <- pivot_wider(materias_por_aluno, 
                                 id_cols = RA, 
                                 names_from = COD_MATERI,
@@ -233,7 +243,8 @@ evasao_filtrado <- merge(evasao_filtrado, materias_por_aluno, by = "RA")
 # Retorna os indices das colunas com baixa variância
 lowVariationCols <- nearZeroVar(evasao_filtrado)
 lowVariationColNames <- nearZeroVar(evasao_filtrado, names = TRUE)
-print(paste("Fração de colunas nearZeroVar:", round(length(lowVariationCols)/length(evasao_filtrado),4)))
+print(paste("Fração de colunas nearZeroVar:",
+            round(length(lowVariationCols)/length(evasao_filtrado),4)))
 
 # Remove as colunas com baixa variação do dataframe final
 evasao_filtrado <- evasao_filtrado[, -lowVariationCols]
@@ -252,7 +263,8 @@ boruta_signif <- names(boruta_output$finalDecision[
 
 print(attStats(boruta_output))
 plot(boruta_output, cex.axis=.7, las=3, xlab="", main="Variable Importance")
-boruta_filtered <- select(boruta_filtered, boruta_signif) # Filtrar colunas do BORUTA
+boruta_filtered <- select(boruta_filtered,
+                          "EVADIDO", boruta_signif) # Filtrar colunas do BORUTA
 
 # Forward regression using AIC
 model <- lm(EVADIDO~., data = forward_step_filtered)
@@ -271,9 +283,15 @@ BWDfit.p <- ols_step_backward_p(model, prem =.04, details = TRUE)
 backward_step_filtered <- 
   select(backward_step_filtered, !BWDfit.p$removed)
 
-
 # Exporta o dataframe final
-write.csv(evasao_filtrado, file = "datasets/no_filtered_analysis.csv", row.names = FALSE)
-write.csv(boruta_filtered, file = "datasets/boruta_filtered.csv", row.names = FALSE)
-write.csv(forward_step_filtered, file = "datasets/forward_filtered_analysis.csv", row.names = FALSE)
-write.csv(backward_step_filtered, file = "datasets/backward_filtered_analysis.csv", row.names = FALSE)
+write.csv(evasao_filtrado, 
+          file = "datasets/no_filtered_analysis.csv", row.names = FALSE)
+
+write.csv(boruta_filtered, 
+          file = "datasets/boruta_filtered.csv", row.names = FALSE)
+
+write.csv(forward_step_filtered, 
+          file = "datasets/forward_filtered_analysis.csv", row.names = FALSE)
+
+write.csv(backward_step_filtered, 
+          file = "datasets/backward_filtered_analysis.csv", row.names = FALSE)
