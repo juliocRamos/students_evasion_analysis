@@ -1,4 +1,6 @@
 .ipynb_checkpoints  
+predictions_*/
+__pycache__
 .Rhistory 
 .Rproj.user
 **/.RData
