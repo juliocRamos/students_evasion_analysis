@@ -40,7 +40,7 @@ def generate_output(all_predictions):
         finally:
             file.close()
 
-def generate_output_csv(n_epoch, all_predictions):
+def generate_output_csv(all_predictions):
     try:
         ## Create file name
         logfile = "predictions_results.csv"
@@ -52,23 +52,26 @@ def generate_output_csv(n_epoch, all_predictions):
         if (os.path.exists(logfile)):
             dt = pd.read_csv(logfile)
         else:
-            dt = pd.DataFrame(columns = ["epoch","model_accuracy",
+            dt = pd.DataFrame(columns = ["model_accuracy",
                                          "f1_score","precision_score",
                                          "roc_score","epoch_best_params"])
-        ## create Dict to output data
+        
+        
+        ## insert in Dict the output data
         for i in range(len(all_predictions)):
+            ## Create Vector Dict
             dt2 = {
-                "epoch": n_epoch,
                 "model_accuracy": all_predictions[i]["model_accuracy"],
                 "f1_score": all_predictions[i]["f1_score"],
                 "precision_score": all_predictions[i]["precision_score"],
                 "roc_score": all_predictions[i]["roc_score"],
                 "epoch_best_params": all_predictions[i]["epoch_params"]
             }
-        dt = dt.append(dt2, ignore_index=True)
+            ## Append dict in the dataframe
+            dt = dt.append(dt2, ignore_index=True)
         
-        ## Write CSV File
-        dt.to_csv(logfile, index = False)
+            ## Write CSV File
+            dt.to_csv(logfile, index = False)
         
     except Exception as ex:
         raise(ex)        
