@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.4.3
+current version:  0.4.5
 
 Notes:
 
@@ -75,3 +75,9 @@ Training-models: Adapted Neural Network to run with TensorFlow.Keras
 Pre-processing: Added label encodding for GRADE_CORRENTE
 
 General: Removed unusefull files and datasets and improved .gitignore
+
+Training Models: GridSearch and StratifiedKfold implementation to Decision
+Tree algorithm and export results in CSV file (tests)
+
+Training Models: Fix SVM and Decision Tree scripts and finish CSV export 
+function
