@@ -15,7 +15,7 @@ library(caret)
 library(superml)
 
 # Leitura do dataset
-evasao_alunos <- read.csv("datasets/dados_evasao.csv", encoding = "UTF-8")
+evasao_alunos <- read.csv("datasets/original_data/dados_evasao.csv", encoding = "UTF-8")
 
 # Verifico o tipo das colunas e se existem valores
 str(evasao_alunos)
@@ -285,13 +285,13 @@ backward_step_filtered <-
 
 # Exporta o dataframe final
 write.csv(evasao_filtrado, 
-          file = "datasets/no_filtered_analysis.csv", row.names = FALSE)
+          file = "datasets/preprocessed_data/no_filtered_analysis.csv", row.names = FALSE)
 
 write.csv(boruta_filtered, 
-          file = "datasets/boruta_filtered.csv", row.names = FALSE)
+          file = "datasets/preprocessed_data/boruta_filtered.csv", row.names = FALSE)
 
 write.csv(forward_step_filtered, 
-          file = "datasets/forward_filtered_analysis.csv", row.names = FALSE)
+          file = "datasets/preprocessed_data/forward_filtered_analysis.csv", row.names = FALSE)
 
 write.csv(backward_step_filtered, 
-          file = "datasets/backward_filtered_analysis.csv", row.names = FALSE)
+          file = "datasets/preprocessed_data/backward_filtered_analysis.csv", row.names = FALSE)
