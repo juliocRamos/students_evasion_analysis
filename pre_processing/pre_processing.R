@@ -161,6 +161,7 @@ calcMediaGeral <- function(data_temp, ra_list){
       # Calcula a nota media geral
       data_temp$NOTA_MEDIA[which(data_temp$RA == ra)] <-
          round(mean(data_temp$NOTA_MEDIA[which(data_temp$RA == ra)]), 1)
+
       # # Calcula a pontuacao_ps geral
       data_temp$PONTUACAO_PS[which(data_temp$RA == ra)] <-
          round(mean(data_temp$PONTUACAO_PS[which(data_temp$RA == ra)]), 1)

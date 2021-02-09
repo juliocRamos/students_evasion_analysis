@@ -1,19 +1,9 @@
 ------- PRE_RELEASE VERSION CONTROL -------
-<<<<<<< HEAD
 
-<<<<<<< HEAD
 current version:  0.4.7
-=======
-current version:  0.3.6
->>>>>>> [rscript][pre-processing] Change Top 10 chart and Fixes
 
 Notes:
 
-=======
-current version:  0.3.0
-
-Notes:
->>>>>>> [pre-processing][Merge] 0.1.0 pre-release into release (#18)
 Pre-processing: Change rows by columns - DSC_MAT and DSC_STATUS_MAT
 
 New pre-processing script: Transcription of Python code into R code
@@ -44,7 +34,6 @@ Pre-processing: General fixes and code refactoring.
 
 Pre-processing: Added new columns: TOT_APROVACOES and TOT_MAT_CURSADAS.
 
-<<<<<<< HEAD
 Pre-analysis: Created r-script dropout_student_profile.r and graph plot 
 (RESID_ARARAS only).
 
@@ -66,7 +55,6 @@ means to year; standardizing plot charts.
 
 Pre analysis: Fix chart "Top 10 Disciplinas mais cursadas (Aprovado x Reprovado)" and moved files
 in correct folders.
-<<<<<<< HEAD
 
 Pre-processing: Created new columns TOT_REPROV_FREQ, TOT_REPROV_NOTA and TOT_REPROV_NOTA_FREQ.
 Generated .arff database version.
@@ -102,8 +90,3 @@ Pre-processing: Generated final trainig dbs.
 
 Geleral modifications: Removed unused files; Updated project folder structure for original and
 preprocessed dbs; Updated all load files paths in pre-processing and training.
-=======
-Pre-analysis: Created r-script dropout_student_profile.r and graph plot (RESID_ARARAS only)
->>>>>>> [pre-processing][Merge] 0.1.0 pre-release into release (#18)
-=======
->>>>>>> [rscript][pre-processing] Change Top 10 chart and Fixes
