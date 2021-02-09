@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.4.6
+current version:  0.4.7
 
 Notes:
 
@@ -85,3 +85,8 @@ function
 Training models: Standardized all training models and applied export_data_csv to knn and neural_network
 
 General modifications: Removed unused files.
+
+Pre-processing: Generated final trainig dbs.
+
+Geleral modifications: Removed unused files; Updated project folder structure for original and
+preprocessed dbs; Updated all load files paths in pre-processing and training.

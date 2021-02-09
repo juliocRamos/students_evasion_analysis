@@ -7,7 +7,7 @@ library(grid)
 library(gridExtra)
 
 #Importando CSV pre-processado
-total_alunos <- read.csv("datasets/pre_processed_analysis.csv", encoding = "UTF-8")
+total_alunos <- read.csv("datasets/preprocessed_data/no_filtered_analysis.csv", encoding = "UTF-8")
 
 ################# Functions
 
