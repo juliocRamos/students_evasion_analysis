@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.4.5
+current version:  0.4.6
 
 Notes:
 
@@ -66,11 +66,11 @@ exported file.
 
 Pre-processing: Fixed Boruta bugs for generating filtered final dataset
 
-Classification: Implemented KNN with scikit learn
+Training models: Implemented KNN with scikit learn
 
-Training-models: Implemented test Neural Network with keras
+Training models: Implemented test Neural Network with keras
 
-Training-models: Adapted Neural Network to run with TensorFlow.Keras
+Training models: Adapted Neural Network to run with TensorFlow.Keras
 
 Pre-processing: Added label encodding for GRADE_CORRENTE
 
@@ -81,3 +81,7 @@ Tree algorithm and export results in CSV file (tests)
 
 Training Models: Fix SVM and Decision Tree scripts and finish CSV export 
 function
+
+Training models: Standardized all training models and applied export_data_csv to knn and neural_network
+
+General modifications: Removed unused files.
