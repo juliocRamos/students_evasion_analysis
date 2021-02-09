@@ -1,5 +1,5 @@
 ------- RELEASE VERSION CONTROL -------
-current version:  1.0.0
+current version:  2.0.0
 
 Notes:
 Release minor version with pre-processing and initial analysis
