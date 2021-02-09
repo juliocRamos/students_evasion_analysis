@@ -2,10 +2,14 @@
 <<<<<<< HEAD
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 current version:  0.4.7
 =======
 current version:  0.3.6
 >>>>>>> [rscript][pre-processing] Change Top 10 chart and Fixes
+=======
+current version:  0.3.6
+>>>>>>> 55c553573d4050d6a01785d38e863049b9a1be12
 
 Notes:
 
@@ -67,6 +71,7 @@ means to year; standardizing plot charts.
 Pre analysis: Fix chart "Top 10 Disciplinas mais cursadas (Aprovado x Reprovado)" and moved files
 in correct folders.
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 Pre-processing: Created new columns TOT_REPROV_FREQ, TOT_REPROV_NOTA and TOT_REPROV_NOTA_FREQ.
 Generated .arff database version.
@@ -107,3 +112,5 @@ Pre-analysis: Created r-script dropout_student_profile.r and graph plot (RESID_A
 >>>>>>> [pre-processing][Merge] 0.1.0 pre-release into release (#18)
 =======
 >>>>>>> [rscript][pre-processing] Change Top 10 chart and Fixes
+=======
+>>>>>>> 55c553573d4050d6a01785d38e863049b9a1be12
