@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.4.7
+current version:  0.4.8
 
 Notes:
 
@@ -90,3 +90,6 @@ Pre-processing: Generated final trainig dbs.
 
 Geleral modifications: Removed unused files; Updated project folder structure for original and
 preprocessed dbs; Updated all load files paths in pre-processing and training.
+
+Training models: Standardized Scaler for NeuralNetwork model and removed double call to scaler
+from pipeline.
