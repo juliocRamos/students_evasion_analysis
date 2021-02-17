@@ -66,7 +66,7 @@ def generate_output_csv(all_predictions, logdir = "", model = ""):
                                          "precision_score", "roc_score",
                                          "recall_score", "max_error",
                                          "mean_squared_error", "mean_absolute_error",
-                                         "n_splits", "epoch_best_params"])
+                                         "epoch_best_params"])
         
         
         ## insert in Dict the output data
