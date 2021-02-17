@@ -30,7 +30,7 @@ def generate_output(all_predictions, logdir = "", model = "", run = 0):
                 if len(pred) == 0:
                     print("Nothing to write in file!!")
 
-                file.write("=================RESULTS EPOCH ==========================\n")
+                file.write("================= RESULTS ==========================\n")
                 file.write(str(pred["confusion_matrix"])+"\n\n")
                 file.write(str(pred["classification_report"])+"\n\n")
                 file.write("Splits: " + str(pred["n_splits"])+"\n\n")
@@ -42,7 +42,8 @@ def generate_output(all_predictions, logdir = "", model = "", run = 0):
                 file.write("Mean squared err.: " + str(pred["mean_squared_error"])+"\n\n")
                 file.write("Mean abs. err.: " + str(pred["mean_absolute_error"])+"\n\n")
                 file.write("Epoch params: " + str(pred["epoch_params"])+"\n\n")
-                file.write("====================END OF EPOCH==========================\n\n")
+                file.write("Train/Test duration (minutes): "+ str(pred["train_test_duration"])+"\n\n")
+                file.write("==================== END ==========================")
                 sleep(1)
         except Exception as ex:
             raise(ex)
@@ -66,7 +67,7 @@ def generate_output_csv(all_predictions, logdir = "", model = ""):
                                          "precision_score", "roc_score",
                                          "recall_score", "max_error",
                                          "mean_squared_error", "mean_absolute_error",
-                                         "epoch_best_params"])
+                                         "train_test_duration", "epoch_best_params"])
         
         
         ## insert in Dict the output data
@@ -82,6 +83,7 @@ def generate_output_csv(all_predictions, logdir = "", model = ""):
                 "max_error": pred["max_error"],
                 "mean_squared_error": pred["mean_squared_error"],
                 "mean_absolute_error": pred["mean_absolute_error"],
+                "train_test_duration": pred["train_test_duration"],
                 "epoch_best_params": pred["epoch_params"]
             }
             ## Append dict in the dataframe
