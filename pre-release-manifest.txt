@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.5.0
+current version:  0.5.1
 
 Notes:
 
@@ -97,3 +97,5 @@ from pipeline.
 Training models: General code improvement
 
 Training models: Adepted ML scripts for google colab tests executions.
+
+Training models: Standardized parameters for all models
