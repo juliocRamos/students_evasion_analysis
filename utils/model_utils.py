@@ -38,7 +38,6 @@ def generate_output(all_predictions, logdir = "", model = "", run = 0):
                 file.write("F1 score: " + str(pred["f1_score"])+"\n\n")
                 file.write("Precision: " + str(pred["precision_score"])+"\n\n")
                 file.write("ROC: " + str(pred["roc_score"])+"\n\n")
-                file.write("Max error: " + str(pred["max_error"])+"\n\n")
                 file.write("Mean squared err.: " + str(pred["mean_squared_error"])+"\n\n")
                 file.write("Mean abs. err.: " + str(pred["mean_absolute_error"])+"\n\n")
                 file.write("Epoch params: " + str(pred["epoch_params"])+"\n\n")
@@ -64,13 +63,11 @@ def generate_output_csv(all_predictions, logdir = "", model = ""):
             dt = pd.read_csv(results_path)
         else:
             dt = pd.DataFrame(columns = ["database", "n_splits", "model_accuracy", "f1_score",
-                                         "precision_score", "roc_score",
-                                         "recall_score", "max_error",
-                                         "mean_squared_error", "mean_absolute_error",
-                                         "train_test_duration", "epoch_best_params",
+                                         "precision_score", "roc_score", "recall_score",
+                                         "log_loss", "confusion_matrix", "mean_squared_error",
+                                         "mean_absolute_error", "train_test_duration", "epoch_best_params",
                                          "train_size", "test_size"])
-        
-        
+
         ## insert in Dict the output data
         for pred in all_predictions:
             ## Create Vector Dict
@@ -82,7 +79,8 @@ def generate_output_csv(all_predictions, logdir = "", model = ""):
                 "precision_score": pred["precision_score"],
                 "roc_score": pred["roc_score"],
                 "recall_score": pred["recall_score"],
-                "max_error": pred["max_error"],
+                "log_loss": pred["log_loss"],
+                "confusion_matrix": pred["confusion_matrix"],
                 "mean_squared_error": pred["mean_squared_error"],
                 "mean_absolute_error": pred["mean_absolute_error"],
                 "train_test_duration": pred["train_test_duration"],
