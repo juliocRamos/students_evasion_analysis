@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.6.0
+current version:  0.6.3
 
 Notes:
 
@@ -103,3 +103,5 @@ Training models: Standardized parameters for all models
 General modifications: Modified project strucutre to better split grid_search best param search
 algorithms from train/test models and created scripts to test top 2 best grid_search params.
 
+General modifications: Standardized filtered databases names, added new outputs to utils
+scripts to improve analysis steps, updated grid_search scripts to fit new params.
