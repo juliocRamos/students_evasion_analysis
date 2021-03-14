@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.5.1
+current version:  0.6.0
 
 Notes:
 
@@ -99,3 +99,7 @@ Training models: General code improvement
 Training models: Adepted ML scripts for google colab tests executions.
 
 Training models: Standardized parameters for all models
+
+General modifications: Modified project strucutre to better split grid_search best param search
+algorithms from train/test models and created scripts to test top 2 best grid_search params.
+

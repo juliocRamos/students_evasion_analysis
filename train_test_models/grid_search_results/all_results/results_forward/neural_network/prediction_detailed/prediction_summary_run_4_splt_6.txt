@@ -1,0 +1,35 @@
+================= RESULTS ==========================
+[[97  3]
+ [14 53]]
+
+              precision    recall  f1-score   support
+
+           0       0.87      0.97      0.92       100
+           1       0.95      0.79      0.86        67
+
+    accuracy                           0.90       167
+   macro avg       0.91      0.88      0.89       167
+weighted avg       0.90      0.90      0.90       167
+
+
+Splits: 6
+
+Accuracy: 0.8982035928143712
+
+F1 score: 0.8617886178861788
+
+Precision: 0.9464285714285714
+
+ROC: 0.8805223880597014
+
+Max error: 1
+
+Mean squared err.: 0.10179640718562874
+
+Mean abs. err.: 0.10179640718562874
+
+Epoch params: {'clf__batch_size': 50, 'clf__dropout': 0.2, 'clf__epochs': 50, 'clf__init': 'uniform', 'clf__optimizer': 'Adam'}
+
+Train/Test duration (minutes): 0:07:03.255182
+
+==================== END ==========================
