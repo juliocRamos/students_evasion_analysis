@@ -1,6 +1,6 @@
 ------- PRE_RELEASE VERSION CONTROL -------
 
-current version:  0.6.3
+current version:  0.6.4
 
 Notes:
 
@@ -105,3 +105,7 @@ algorithms from train/test models and created scripts to test top 2 best grid_se
 
 General modifications: Standardized filtered databases names, added new outputs to utils
 scripts to improve analysis steps, updated grid_search scripts to fit new params.
+
+Traning models: Removed mock params from neural network model creation and increase evaluated
+param range to 5 due to model generalization errors with 3 first configs provided by 
+grid search.
